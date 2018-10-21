@@ -1,0 +1,31 @@
+import json
+from flask import Flask, request
+from twilio.twiml.messaging_response import MessagingResponse
+
+app = Flask(__name__)
+
+
+@app.route("/receiveSms", methods=['GET', 'POST'])
+def sms_ahoy_reply():
+
+
+    """Respond to incoming messages with a friendly SMS."""
+    # Start our response
+    resp = MessagingResponse()
+    
+    with open('tutordata.json') as database:
+        theTutor = json.load(database)
+        for tutor in theTutor['subject']:
+        #this will search the database based on the subject requested.
+        
+            # Add a message
+            for t in tutor.values():
+
+                resp.message("The tutor you requested for is: ", end=" ")
+
+                for a in t:
+                    resp.message(a)
+    return str(resp)
+
+if __name__ == "__main__":
+    app.run(debug=True)
